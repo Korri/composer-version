@@ -1,0 +1,12 @@
+{
+    "name": "korri/composer-version",
+    "description": "Update your package version for git managed composer packages.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Vacher",
+            "email": "composer-version@korri.fr"
+        }
+    ],
+    "require": {}
+}
