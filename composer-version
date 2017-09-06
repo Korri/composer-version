@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+$optionsDefinitions = [
+    'f:' => 'file:',
+    'h' => 'help',
+    'd:' => 'dir:',
+];
+
+$rawOptions = getopt(implode('', array_keys($optionsDefinitions)), $optionsDefinitions, $argumentIndex);
+$arguments = array_slice($argv, $argumentIndex);
+$options = [];
+foreach ($rawOptions as $short => $long) {
+    $cleanShort = rtrim($short, ':');
+    $cleanLong = rtrim($long, ':');
+    $options[$cleanShort] = $rawOptions[$cleanShort] ?? $rawOptions[$cleanShort] ?? null;
+}
+if (count($arguments) !== 1 || $options['help'] === false) {
+    echo <<<HELP
+Usage: composer-version [options] <new-version> | major | minor | patch
+    Options:
+        -h, --help Show this help text
+        -f, --file Path to composer.json file, default to current folder
+        -d, --dir  Path to git repository, default to composer.json's folder
+HELP;
+    exit($options['help'] === false ? 0 : 1);
+}
+

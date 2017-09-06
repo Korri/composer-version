@@ -2,11 +2,32 @@
     "name": "korri/composer-version",
     "description": "Update your package version for git managed composer packages.",
     "license": "MIT",
+    "bin": [
+        "composer-version"
+    ],
     "authors": [
         {
             "name": "Hugo Vacher",
             "email": "composer-version@korri.fr"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Korri\\ComposerVersion\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
 }
