@@ -22,8 +22,19 @@ class Command
      */
     protected $options;
 
-    public function __construct(array $arguments)
+    /**
+     * Composer file parser
+     * @var ComposerFile
+     */
+    protected $composerFile;
+
+    public function __construct(array $arguments, ComposerFile $composerFile = null)
     {
+        if ($composerFile === null) {
+            $composerFile = new ComposerFile();
+        }
+        $this->composerFile = $composerFile;
+
         $this->arguments = $arguments;
     }
 
@@ -43,10 +54,10 @@ class Command
         $file = $this->option('file', './composer.json');
         $dir = $this->option('dir', dirname($file));
 
-        $composerFile = ComposerFile::fromFile($file);
-        $composerFile->getVersion()->increment($type);
+        $this->composerFile->parseFile($file);
+        $this->composerFile->getVersion()->increment($type);
 
-        file_put_contents($file, $composerFile);
+        file_put_contents($file, $this->composerFile);
     }
 
     public function showHelp()
@@ -66,7 +77,7 @@ HELP;
             $this->parseParameters();
         }
 
-        return $this->arguments[ $index ] ?? $default;
+        return $this->arguments[$index] ?? $default;
     }
 
     protected function option(string $name, $default = null)
@@ -75,7 +86,7 @@ HELP;
             $this->parseParameters();
         }
 
-        return $this->options[ $name ] ?? $default;
+        return $this->options[$name] ?? $default;
     }
 
     protected function parseParameters(): void
@@ -86,7 +97,7 @@ HELP;
         foreach ($rawOptions as $short => $long) {
             $cleanShort = rtrim($short, ':');
             $cleanLong = rtrim($long, ':');
-            $this->options[ $cleanLong ] = $rawOptions[ $cleanShort ] ?? $rawOptions[ $cleanShort ] ?? null;
+            $this->options[$cleanLong] = $rawOptions[$cleanShort] ?? $rawOptions[$cleanShort] ?? null;
         }
     }
 }

@@ -9,22 +9,30 @@ class ComposerFileTest extends TestCase
 {
     const SAMPLE_DIR = __DIR__ . '/json_samples/';
 
-    public function testFromString()
+    public function testParseString()
     {
-        $composer = ComposerFile::fromString('{ "version": "1.1.1" }');
+        $composer = new ComposerFile();
+
+        $composer->parseString('{ "version": "1.1.1" }');
 
         $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
     }
 
-    public function testFromFileLoadsVersionProperly()
+    public function testParseFileLoadsVersionProperly()
     {
-        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/basic/source.json');
+        $composer = new ComposerFile();
+
+        $composer->parseFile(self::SAMPLE_DIR . '/basic/source.json');
+
         $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
     }
 
     public function testDefaultsToVersionOne()
     {
-        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/no-version/source.json');
+        $composer = new ComposerFile();
+
+        $composer->parseFile(self::SAMPLE_DIR . '/no-version/source.json');
+
         $this->assertEquals('1.0.0', $composer->getVersion()->__toString());
     }
 
@@ -43,7 +51,9 @@ class ComposerFileTest extends TestCase
     /** @dataProvider indentationDataProvider */
     public function testToStringKeepsIndentationIntact(string $folder)
     {
-        $composer = ComposerFile::fromFile($folder . '/source.json');
+        $composer = new ComposerFile();
+
+        $composer->parseFile($folder . '/source.json');
 
         $composer->getVersion()->increment('major');
 
@@ -57,7 +67,10 @@ class ComposerFileTest extends TestCase
 
     public function testToStringShouldNotChangeAValidFile()
     {
-        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/basic/source.json');
+        $composer = new ComposerFile();
+
+        $composer = $composer->parseFile(self::SAMPLE_DIR . '/basic/source.json');
+
         $this->assertStringEqualsFile(
             self::SAMPLE_DIR . '/basic/source.json',
             $composer->__toString()

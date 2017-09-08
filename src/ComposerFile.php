@@ -18,25 +18,23 @@ class ComposerFile
 
     const JSON_FLAGS = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
-    /**
-     * ComposerFile constructor.
-     * @param array $json
-     */
-    public function __construct(array $json, string $indent = '    ')
+    public function __construct(array $json = null, string $indent = '    ')
     {
         $this->data = $json;
         $this->indent = $indent;
     }
 
-    public static function fromFile(string $path): ComposerFile
+    public function parseFile(string $path): ComposerFile
     {
-        return static::fromString(file_get_contents($path));
+        return $this->parseString(file_get_contents($path));
     }
 
-    public static function fromString(string $json): ComposerFile
+    public function parseString(string $json): ComposerFile
     {
-        $indent = self::detectIndentation($json);
-        return new static(json_decode($json, true), $indent);
+        $this->detectIndentation($json);
+        $this->data = json_decode($json, true);
+
+        return $this;
     }
 
     public function getVersion(): Version
@@ -88,11 +86,10 @@ class ComposerFile
             + array_slice($data, $max, count($data) - $max, true);
     }
 
-    private static function detectIndentation($string)
+    private function detectIndentation($string)
     {
         if (preg_match('/^(\s+)"/m', $string, $matches)) {
-            return $matches[1];
+            $this->indent = $matches[1];
         }
-        return '    ';
     }
 }
