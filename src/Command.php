@@ -60,7 +60,7 @@ Usage: composer-version [options] <new-version> | major | minor | patch
 HELP;
     }
 
-    protected function argument(int $index, $default = null): string
+    protected function argument(int $index, $default = null)
     {
         if ($this->options === null) {
             $this->parseParameters();

@@ -34,14 +34,15 @@ class VersionTest extends TestCase
     /** @dataProvider validVersionsProvider */
     public function testValidVersionParsing(string $string, array $expected)
     {
-        $version = Version::fromString($string);
+        $version = new Version($string);
         $this->assertSame($expected, $version->getParts());
     }
 
     /** @dataProvider validVersionsProvider */
     public function testToString($expectedString, $parts)
     {
-        $version = new Version($parts);
+        $version = new Version();
+        $version->setParts($parts);
 
         $this->assertSame($expectedString, $version->__toString());
     }
@@ -63,13 +64,13 @@ class VersionTest extends TestCase
      */
     public function testInvalidVersionParsing(string $string)
     {
-        $version = Version::fromString($string);
+        $version = new Version($string);
         $this->assertFalse(true, 'Parsed as ' . implode('.', $version->getParts()));
     }
 
     public function testIncrementMajor()
     {
-        $version = Version::fromString('1.1.1');
+        $version = new Version('1.1.1');
         $version->increment('major');
 
         $this->assertEquals('2.0.0', $version->__toString());
@@ -77,7 +78,7 @@ class VersionTest extends TestCase
 
     public function testIncrementMinor()
     {
-        $version = Version::fromString('1.1.1');
+        $version = new Version('1.1.1');
         $version->increment('minor');
 
         $this->assertEquals('1.2.0', $version->__toString());
@@ -85,7 +86,7 @@ class VersionTest extends TestCase
 
     public function testIncrementPatch()
     {
-        $version = Version::fromString('1.1.1');
+        $version = new Version('1.1.1');
         $version->increment('patch');
 
         $this->assertEquals('1.1.2', $version->__toString());
@@ -93,7 +94,7 @@ class VersionTest extends TestCase
 
     public function testIncrementPatchWithSuffix()
     {
-        $version = Version::fromString('1.1.1-alpha2');
+        $version = new Version('1.1.1-alpha2');
         $version->increment('patch');
 
         $this->assertEquals('1.1.2', $version->__toString());

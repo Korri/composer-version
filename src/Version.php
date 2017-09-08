@@ -13,24 +13,30 @@ class Version
         'patch' => 2,
     ];
 
-    public function __construct(array $parts)
+    public function __construct(string $version = null)
     {
-        $this->parts = $parts;
+        if ($version !== null) {
+            $this->parse($version);
+        }
     }
 
-    public static function fromString($versionString)
+    public function parse(string $versionString)
     {
         $matches = preg_match('/^v?(\d+)\.(\d+).(\d+)(?:-(dev|(?:p|patch|a|alpha|b|beta|RC))(\d+)?)?$/', $versionString, $parts);
         if (!$matches || isset($parts[4]) && $parts[4] === 'dev' && isset($parts[5])) {
             throw new \InvalidArgumentException('Invalid version string: ' . $versionString . ', see https://getcomposer.org/doc/04-schema.md#version');
         }
-        $parts = array_slice($parts, 1);
-        return new static($parts);
+        $this->parts = array_slice($parts, 1);
     }
 
     public function getParts(): array
     {
         return $this->parts;
+    }
+
+    public function setParts(array $parts): void
+    {
+        $this->parts = $parts;
     }
 
     public function __toString(): string
@@ -42,7 +48,7 @@ class Version
         return $string;
     }
 
-    public function increment($type): Version
+    public function increment($type)
     {
         if (!isset(self::TYPES[$type])) {
             throw new \InvalidArgumentException('Invalid increment type: ' . $type);
@@ -56,7 +62,5 @@ class Version
         }
 
         $this->parts[$i]++;
-
-        return $this;
     }
 }

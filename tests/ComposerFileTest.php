@@ -7,12 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ComposerFileTest extends TestCase
 {
-    public function testFromFile()
-    {
-        $composer = ComposerFile::fromFile(__DIR__ . '/json_samples/basic.json');
-
-        $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
-    }
+    const SAMPLE_DIR = __DIR__ . '/json_samples/';
 
     public function testFromString()
     {
@@ -21,19 +16,51 @@ class ComposerFileTest extends TestCase
         $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
     }
 
-    public function testToString()
+    public function testFromFileLoadsVersionProperly()
     {
-        $composer = ComposerFile::fromFile(__DIR__ . '/json_samples/basic.json');
-
-        $this->assertStringEqualsFile(__DIR__ . '/json_samples/basic.json', $composer->__toString());
+        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/basic/source.json');
+        $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
     }
 
-    public function testToStringUpdatesVersion()
+    public function testDefaultsToVersionOne()
     {
-        $composer = ComposerFile::fromFile(__DIR__ . '/json_samples/basic.json');
+        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/no-version/source.json');
+        $this->assertEquals('1.0.0', $composer->getVersion()->__toString());
+    }
+
+    public function indentationDataProvider()
+    {
+
+        $folders = scandir(self::SAMPLE_DIR);
+        $folders = array_filter($folders, function ($folder) {
+            return $folder[0] !== '.';
+        });
+        return array_combine($folders, array_map(function ($folder) {
+            return [self::SAMPLE_DIR . $folder];
+        }, $folders));
+    }
+
+    /** @dataProvider indentationDataProvider */
+    public function testToStringKeepsIndentationIntact(string $folder)
+    {
+        $composer = ComposerFile::fromFile($folder . '/source.json');
 
         $composer->getVersion()->increment('major');
 
-        $this->assertStringEqualsFile(__DIR__ . '/json_samples/basic_v2.json', $composer->__toString());
+        $this->assertEquals('2.0.0', $composer->getVersion()->__toString());
+
+        $this->assertStringEqualsFile(
+            $folder . '/expected.json',
+            $composer->__toString()
+        );
+    }
+
+    public function testToStringShouldNotChangeAValidFile()
+    {
+        $composer = ComposerFile::fromFile(self::SAMPLE_DIR . '/basic/source.json');
+        $this->assertStringEqualsFile(
+            self::SAMPLE_DIR . '/basic/source.json',
+            $composer->__toString()
+        );
     }
 }
