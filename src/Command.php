@@ -54,8 +54,7 @@ class Command
 
         $this->composerFile->parseFile($file);
         $this->composerFile->getVersion()->increment($type);
-
-        file_put_contents($file, $this->composerFile);
+        $this->composerFile->writeFile($file);
 
         return true;
     }

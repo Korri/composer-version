@@ -29,6 +29,11 @@ class ComposerFile
         return $this->parseString(file_get_contents($path));
     }
 
+    public function writeFile(string $path): bool
+    {
+        return (bool)file_put_contents($path, $this->__toString());
+    }
+
     public function parseString(string $json): ComposerFile
     {
         $this->detectIndentation($json);

@@ -37,8 +37,8 @@ class CommandTest extends TestCase
             ->method('getVersion')
             ->willReturn($version);
         $mockComposerFile->expects($this->once())
-            ->method('__toString')
-            ->willReturn('');
+            ->method('writeFile')
+            ->willReturn(true);
 
         return $mockComposerFile;
     }

@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Korri\ComposerVersion\ComposerFile;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
 class ComposerFileTest extends TestCase
@@ -75,5 +77,27 @@ class ComposerFileTest extends TestCase
             self::SAMPLE_DIR . '/basic/source.json',
             $composer->__toString()
         );
+    }
+
+    public function testWriteFileShouldSaveFile()
+    {
+
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
+
+        $json = <<<JSON
+{
+    "version": "1.1.1"
+}
+
+JSON;
+
+        $composer = new ComposerFile();
+
+        $composer->parseString($json);
+
+        $composer->writeFile('test.json');
+
+        $this->assertEquals($json, file_get_contents('test.json'));
     }
 }
