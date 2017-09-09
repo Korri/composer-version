@@ -48,6 +48,11 @@ class CommandTest extends TestCase
             $mockComposerFile->expects($this->once())
                 ->method('writeFile')
                 ->willReturn(true);
+        } else {
+            // Prevent actual file write
+            $mockComposerFile->expects($this->any())
+                ->method('writeFile')
+                ->willReturn(true);
         }
 
         return $mockComposerFile;
