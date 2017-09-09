@@ -8,10 +8,10 @@ versioned composer packages or projects, directly inspired by [npm version](http
 
 ```
 Usage: composer-version [options] <new-version> | major | minor | patch
-    Options:
-        -h, --help Show this help text
-        -f, --file Path to composer.json file, default to ./composer.json
-        -p, --push Push commit and tag to remote origin
+
+  -h, --help Show this help text
+  -f, --file Path to composer.json file, default to ./composer.json
+  -p, --push Push commit and tag to remote origin
 ```
 
 

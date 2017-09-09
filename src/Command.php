@@ -85,10 +85,13 @@ class Command
     {
         echo <<<HELP
 Usage: composer-version [options] <new-version> | major | minor | patch
-    Options:
-        -h, --help Show this help text
-        -f, --file Path to composer.json file, default to ./composer.json
-        -p, --push Push commit and tag to remote origin
+
+Updates composer.json version, then commits the change and tags it on the
+git repository
+
+  -h, --help Show this help text
+  -f, --file Path to composer.json file, default to ./composer.json
+  -p, --push Push commit and tag to remote origin
 HELP;
     }
 
