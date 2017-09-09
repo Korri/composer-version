@@ -1,6 +1,6 @@
 # Composer-version [![Build Status](https://travis-ci.org/Korri/composer-version.svg?branch=master)](https://travis-ci.org/Korri/composer-version)
 
-This is a no-dependencies `PHP ^7.1` tool to help with releasing semantically
+This is a no-dependencies `PHP ^7.1` commandline tool that helps with releasing semantically
 versioned composer packages or projects, directly inspired by [npm version](https://docs.npmjs.com/cli/version).
 
 
