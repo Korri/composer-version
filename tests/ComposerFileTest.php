@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ComposerFileTest extends TestCase
 {
-    const SAMPLE_DIR = __DIR__ . '/json_samples/';
+    const SAMPLE_DIR = __DIR__ . '/json_samples';
 
     public function testParseString()
     {
@@ -56,7 +56,7 @@ class ComposerFileTest extends TestCase
             return $folder[0] !== '.';
         });
         return array_combine($folders, array_map(function ($folder) {
-            return [self::SAMPLE_DIR . $folder];
+            return [self::SAMPLE_DIR . '/' . $folder];
         }, $folders));
     }
 

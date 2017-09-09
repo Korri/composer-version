@@ -26,13 +26,11 @@ class ComposerFile
 
     public function parseFile(string $path): ComposerFile
     {
-        $content = file_get_contents($path);
-
-        if ($content === false) {
+        if (!file_exists($path) || !is_readable($path)) {
             throw new \InvalidArgumentException('Could not read file ' . $path);
         }
 
-        return $this->parseString($content);
+        return $this->parseString(file_get_contents($path));
     }
 
     public function writeFile(string $path): bool
