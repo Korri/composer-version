@@ -7,6 +7,7 @@ class Command
     const OPTIONS = [
         'f:' => 'file:',
         'h' => 'help',
+        'p' => 'push',
     ];
 
     /**
@@ -106,10 +107,10 @@ HELP;
         $rawOptions = getopt(implode('', array_keys(self::OPTIONS)), self::OPTIONS, $argumentIndex);
         $this->arguments = array_slice($argv, $argumentIndex);
         $this->options = [];
-        foreach ($rawOptions as $short => $long) {
+        foreach (self::OPTIONS as $short => $long) {
             $cleanShort = rtrim($short, ':');
             $cleanLong = rtrim($long, ':');
-            $this->options[$cleanLong] = $rawOptions[$cleanShort] ?? $rawOptions[$cleanShort] ?? null;
+            $this->options[$cleanLong] = $rawOptions[$cleanLong] ?? $rawOptions[$cleanShort] ?? null;
         }
     }
 

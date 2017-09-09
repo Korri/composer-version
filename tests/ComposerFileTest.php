@@ -29,6 +29,16 @@ class ComposerFileTest extends TestCase
         $this->assertEquals('1.1.1', $composer->getVersion()->__toString());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParseFileThrowsIfFileDoesNotExists()
+    {
+        $composer = new ComposerFile();
+
+        $composer->parseFile(self::SAMPLE_DIR . '/basic/does-not-exists.json');
+    }
+
     public function testDefaultsToVersionOne()
     {
         $composer = new ComposerFile();
