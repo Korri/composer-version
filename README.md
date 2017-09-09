@@ -9,7 +9,7 @@ versioned composer packages or projects, directly inspired by [npm version](http
 ## Usage
 
 ```
-Usage: composer-version [options] <new-version> | major | minor | patch
+composer-version [options] <new-version> | major | minor | patch
 
   -h, --help Show this help text
   -f, --file Path to composer.json file, default to ./composer.json
