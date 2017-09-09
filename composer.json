@@ -1,7 +1,7 @@
 {
     "name": "korri/composer-version",
     "description": "Update your package version for git managed composer packages.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "bin": [
         "composer-version"
