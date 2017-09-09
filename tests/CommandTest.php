@@ -114,4 +114,19 @@ class CommandTest extends TestCase
 
         $this->assertTrue($command->execute());
     }
+
+    public function testPushOption()
+    {
+        $mockComposerFile = $this->initComposerFileMock('test.json');
+        $mockGit = $this->initGitMock([
+            "commit 'test.json' -m 'v2.0.0'",
+            "tag 'v2.0.0'",
+            "push",
+            "push origin 'v2.0.0'"
+        ]);
+
+        $command = $this->initCommand(['file' => 'test.json', 'push' => false], ['major'], $mockComposerFile, $mockGit);
+
+        $this->assertTrue($command->execute());
+    }
 }

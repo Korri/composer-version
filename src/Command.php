@@ -66,10 +66,15 @@ class Command
         $version->increment($type);
         $this->composerFile->writeFile($file);
 
-        $stringVersion = "v{$version}";
+        $tagName = "v{$version}";
 
-        $this->git->commitFile($file, $stringVersion);
-        $this->git->tagVersion($stringVersion);
+        $this->git->commitFile($file, $tagName);
+        $this->git->tagVersion($tagName);
+
+        if ($this->option('push') !== null) {
+            $this->git->push();
+            $this->git->push($tagName);
+        }
 
         return true;
     }
