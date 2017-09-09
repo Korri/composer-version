@@ -92,6 +92,15 @@ class VersionTest extends TestCase
         $this->assertEquals('1.1.2', $version->__toString());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testIncrementInvalidTypeThrowsException()
+    {
+        $version = new Version('1.1.1');
+        $version->increment('millimeter');
+    }
+
     public function testIncrementPatchWithSuffix()
     {
         $version = new Version('1.1.1-alpha2');

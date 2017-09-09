@@ -14,13 +14,13 @@ class Command
      * Arguments passed to the command
      * @var array
      */
-    protected $arguments;
+    protected $arguments = [];
 
     /**
      * Options passed to the command
      * @var
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * Composer file parser
@@ -28,36 +28,36 @@ class Command
      */
     protected $composerFile;
 
-    public function __construct(array $arguments, ComposerFile $composerFile = null)
+    public function __construct(ComposerFile $composerFile = null)
     {
         if ($composerFile === null) {
             $composerFile = new ComposerFile();
         }
         $this->composerFile = $composerFile;
-
-        $this->arguments = $arguments;
     }
 
-    public function execute(): void
+    public function execute(): bool
     {
         if ($this->option('help') !== null) {
             $this->showHelp();
 
-            return;
+            return true;
         }
         if ($this->argument(0) === null) {
             $this->showHelp();
-            exit(1);
+            return false;
         }
 
         $type = $this->argument(0);
-        $file = $this->option('file', './composer.json');
+        $file = $this->option('file', 'composer.json');
         $dir = $this->option('dir', dirname($file));
 
         $this->composerFile->parseFile($file);
         $this->composerFile->getVersion()->increment($type);
 
         file_put_contents($file, $this->composerFile);
+
+        return true;
     }
 
     public function showHelp()
@@ -73,31 +73,33 @@ HELP;
 
     protected function argument(int $index, $default = null)
     {
-        if ($this->options === null) {
-            $this->parseParameters();
-        }
-
         return $this->arguments[$index] ?? $default;
     }
 
     protected function option(string $name, $default = null)
     {
-        if ($this->options === null) {
-            $this->parseParameters();
-        }
-
         return $this->options[$name] ?? $default;
     }
 
-    protected function parseParameters(): void
+    public function parseOptions(array $argv): void
     {
         $rawOptions = getopt(implode('', array_keys(self::OPTIONS)), self::OPTIONS, $argumentIndex);
-        $this->arguments = array_slice($this->arguments, $argumentIndex);
+        $this->arguments = array_slice($argv, $argumentIndex);
         $this->options = [];
         foreach ($rawOptions as $short => $long) {
             $cleanShort = rtrim($short, ':');
             $cleanLong = rtrim($long, ':');
             $this->options[$cleanLong] = $rawOptions[$cleanShort] ?? $rawOptions[$cleanShort] ?? null;
         }
+    }
+
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
+
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
     }
 }

@@ -5,7 +5,7 @@ namespace Korri\ComposerVersion;
 class Version
 {
     /** @var array */
-    protected $parts;
+    protected $parts = [1, 0, 0];
 
     const TYPES = [
         'major' => 0,

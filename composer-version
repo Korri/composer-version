@@ -35,5 +35,9 @@ require COMPOSER_AUTOLOAD_FILE;
 
 $command = new \Korri\ComposerVersion\Command($argv);
 
-$command->execute();
+$command->parseOptions($argv);
+
+if (!$command->execute()) {
+    exit(1);
+}
 
