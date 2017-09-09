@@ -83,7 +83,7 @@ class ComposerFile
         $afterKeys = ['name', 'description'];
         $max = 0;
         $index = 0;
-        foreach ($data as $key => $_) {
+        foreach (array_keys($data) as $key) {
             $index += 1;
             if (in_array($key, $afterKeys)) {
                 $max = $index;
