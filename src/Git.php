@@ -22,9 +22,13 @@ class Git
     public function exec($command): bool
     {
 
-        \exec($this->binary . ' ' . $command, $_, $return);
+        \exec($this->binary . ' ' . $command, $output, $return);
 
-        return $return === 0;
+        if ($return !== 0) {
+            throw new GitException(implode("\n", $output));
+        }
+
+        return true;
     }
 
     public function commitFile(string $file, string $message): bool
