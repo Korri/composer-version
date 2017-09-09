@@ -10,14 +10,18 @@ namespace Tests;
 
 use Korri\ComposerVersion\Command;
 use Korri\ComposerVersion\ComposerFile;
+use Korri\ComposerVersion\Git;
 use Korri\ComposerVersion\Version;
 use PHPUnit\Framework\TestCase;
 
 class CommandTest extends TestCase
 {
-    private function initCommand($options = [], $arguments = [], $mockFile = null)
+    private function initCommand($options = [], $arguments = [], $mockFile = null, $mockGit = null)
     {
-        $command = new Command($mockFile);
+        $mockFile = $mockFile ?? $this->initComposerFileMock();
+        $mockGit = $mockGit ?? $this->initGitMock();
+
+        $command = new Command($mockFile, $mockGit);
 
         $command->setArguments($arguments);
         $command->setOptions($options);
@@ -25,22 +29,46 @@ class CommandTest extends TestCase
         return $command;
     }
 
-    private function initComposerFileMock($expectedFileParsed)
+    /**
+     * @param string|null $expectedFileParsed
+     * @return \PHPUnit_Framework_MockObject_MockObject|ComposerFile
+     */
+    private function initComposerFileMock(string $expectedFileParsed = null)
     {
-        $version = new Version();
+        $version = new Version('1.1.1');
 
         $mockComposerFile = $this->createMock(ComposerFile::class);
-        $mockComposerFile->expects($this->once())
-            ->method('parseFile')
-            ->with($this->equalTo($expectedFileParsed));
-        $mockComposerFile->expects($this->once())
-            ->method('getVersion')
-            ->willReturn($version);
-        $mockComposerFile->expects($this->once())
-            ->method('writeFile')
-            ->willReturn(true);
+        if ($expectedFileParsed) {
+            $mockComposerFile->expects($this->once())
+                ->method('parseFile')
+                ->with($this->equalTo($expectedFileParsed));
+            $mockComposerFile->expects($this->once())
+                ->method('getVersion')
+                ->willReturn($version);
+            $mockComposerFile->expects($this->once())
+                ->method('writeFile')
+                ->willReturn(true);
+        }
 
         return $mockComposerFile;
+    }
+
+    /**
+     * @param array $expectedCommands
+     * @return \PHPUnit_Framework_MockObject_MockObject|Git
+     */
+    private function initGitMock(array $expectedCommands = [])
+    {
+        $mockGit = $this->createPartialMock(Git::class, ['exec']);
+
+        foreach ($expectedCommands as $k => $command) {
+            $mockGit->expects($this->at($k))
+                ->method('exec')
+                ->with($command)
+                ->willReturn(true);
+        }
+
+        return $mockGit;
     }
 
     public function testBasicCommandShowsHelpAndReturnsFalse()
@@ -64,8 +92,12 @@ class CommandTest extends TestCase
     public function testBasicVersionIncrement()
     {
         $mockComposerFile = $this->initComposerFileMock('composer.json');
+        $mockGit = $this->initGitMock([
+            "commit 'composer.json' -m 'v1.2.0'",
+            "tag 'v1.2.0'"
+        ]);
 
-        $command = $this->initCommand([], ['minor'], $mockComposerFile);
+        $command = $this->initCommand([], ['minor'], $mockComposerFile, $mockGit);
 
         $this->assertTrue($command->execute());
     }
@@ -73,8 +105,12 @@ class CommandTest extends TestCase
     public function testFileOption()
     {
         $mockComposerFile = $this->initComposerFileMock('test.json');
+        $mockGit = $this->initGitMock([
+            "commit 'test.json' -m 'v1.1.2'",
+            "tag 'v1.1.2'"
+        ]);
 
-        $command = $this->initCommand(['file' => 'test.json'], ['minor'], $mockComposerFile);
+        $command = $this->initCommand(['file' => 'test.json'], ['patch'], $mockComposerFile, $mockGit);
 
         $this->assertTrue($command->execute());
     }

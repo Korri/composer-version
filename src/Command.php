@@ -7,7 +7,6 @@ class Command
     const OPTIONS = [
         'f:' => 'file:',
         'h' => 'help',
-        'd:' => 'dir:',
     ];
 
     /**
@@ -28,12 +27,23 @@ class Command
      */
     protected $composerFile;
 
-    public function __construct(ComposerFile $composerFile = null)
+    /**
+     * Git util
+     * @var Git
+     */
+    protected $git;
+
+    public function __construct(ComposerFile $composerFile = null, Git $git = null)
     {
         if ($composerFile === null) {
             $composerFile = new ComposerFile();
         }
         $this->composerFile = $composerFile;
+
+        if ($git === null) {
+            $git = new Git();
+        }
+        $this->git = $git;
     }
 
     public function execute(): bool
@@ -50,11 +60,16 @@ class Command
 
         $type = $this->argument(0);
         $file = $this->option('file', 'composer.json');
-        $dir = $this->option('dir', dirname($file));
 
         $this->composerFile->parseFile($file);
-        $this->composerFile->getVersion()->increment($type);
+        $version = $this->composerFile->getVersion();
+        $version->increment($type);
         $this->composerFile->writeFile($file);
+
+        $stringVersion = "v{$version}";
+
+        $this->git->commitFile($file, $stringVersion);
+        $this->git->tagVersion($stringVersion);
 
         return true;
     }
@@ -65,8 +80,7 @@ class Command
 Usage: composer-version [options] <new-version> | major | minor | patch
     Options:
         -h, --help Show this help text
-        -f, --file Path to composer.json file, default to current folder
-        -d, --dir  Path to git repository, default to composer.json's folder
+        -f, --file Path to composer.json file, default to ./composer.json
 HELP;
     }
 

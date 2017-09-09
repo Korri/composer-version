@@ -33,7 +33,7 @@ if (!defined('COMPOSER_AUTOLOAD_FILE')) {
 
 require COMPOSER_AUTOLOAD_FILE;
 
-$command = new \Korri\ComposerVersion\Command($argv);
+$command = new \Korri\ComposerVersion\Command();
 
 $command->parseOptions($argv);
 
