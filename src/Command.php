@@ -34,16 +34,9 @@ class Command
      */
     protected $git;
 
-    public function __construct(ComposerFile $composerFile = null, Git $git = null)
+    public function __construct(ComposerFile $composerFile, Git $git)
     {
-        if ($composerFile === null) {
-            $composerFile = new ComposerFile();
-        }
         $this->composerFile = $composerFile;
-
-        if ($git === null) {
-            $git = new Git();
-        }
         $this->git = $git;
     }
 

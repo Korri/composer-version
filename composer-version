@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
 
+use Korri\ComposerVersion\ComposerFile;
+use Korri\ComposerVersion\Git;
+
 if (version_compare('7.1.0', PHP_VERSION, '>')) {
     fwrite(
         STDERR,
@@ -33,7 +36,7 @@ if (!defined('COMPOSER_AUTOLOAD_FILE')) {
 
 require COMPOSER_AUTOLOAD_FILE;
 
-$command = new \Korri\ComposerVersion\Command();
+$command = new \Korri\ComposerVersion\Command(new ComposerFile(), new Git());
 
 $command->parseOptions($argv);
 
