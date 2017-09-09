@@ -102,6 +102,19 @@ class CommandTest extends TestCase
         $this->assertTrue($command->execute());
     }
 
+    public function testSpecificVersion()
+    {
+        $mockComposerFile = $this->initComposerFileMock('composer.json');
+        $mockGit = $this->initGitMock([
+            "commit 'composer.json' -m 'v0.1.1'",
+            "tag 'v0.1.1'"
+        ]);
+
+        $command = $this->initCommand([], ['0.1.1'], $mockComposerFile, $mockGit);
+
+        $this->assertTrue($command->execute());
+    }
+
     public function testFileOption()
     {
         $mockComposerFile = $this->initComposerFileMock('test.json');

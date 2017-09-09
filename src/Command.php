@@ -63,7 +63,11 @@ class Command
 
         $this->composerFile->parseFile($file);
         $version = $this->composerFile->getVersion();
-        $version->increment($type);
+        try {
+            $version->increment($type);
+        } catch (\InvalidArgumentException $exception) {
+            $version->parse($type);
+        }
         $this->composerFile->writeFile($file);
 
         $tagName = "v{$version}";
