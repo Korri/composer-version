@@ -1,4 +1,6 @@
-# Composer-version [![Build Status](https://travis-ci.org/Korri/composer-version.svg?branch=master)](https://travis-ci.org/Korri/composer-version)
+# Composer-version
+[![Build Status](https://travis-ci.org/Korri/composer-version.svg?branch=master)](https://travis-ci.org/Korri/composer-version)
+[![Test Coverage](https://codeclimate.com/github/Korri/composer-version/badges/coverage.svg)](https://codeclimate.com/github/Korri/composer-version/coverage)
 
 This is a no-dependencies `PHP ^7.1` commandline tool that helps with releasing semantically
 versioned composer packages or projects, directly inspired by [npm version](https://docs.npmjs.com/cli/version).
