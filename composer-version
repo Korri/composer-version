@@ -37,7 +37,11 @@ $command = new \Korri\ComposerVersion\Command();
 
 $command->parseOptions($argv);
 
-if (!$command->execute()) {
+try {
+    $command->execute();
+} catch (Throwable $t) {
+    fwrite(STDERR, get_class($t) . ': ' . $t->getMessage() . "\n\n");
+    $command->showHelp();
     exit(1);
 }
 

@@ -54,9 +54,8 @@ class Command
 
             return true;
         }
-        if ($this->argument(0) === null) {
-            $this->showHelp();
-            return false;
+        if ($this->argument(0) === null || $this->argument(1) !== null) {
+            throw new \InvalidArgumentException('Invalid arguments');
         }
 
         $type = $this->argument(0);

@@ -71,13 +71,20 @@ class CommandTest extends TestCase
         return $mockGit;
     }
 
-    public function testBasicCommandShowsHelpAndReturnsFalse()
+    /** @expectedException \InvalidArgumentException */
+    public function testBasicCommandShowsHelpAndFails()
     {
-        $this->expectOutputRegex('/^Usage:/');
-
         $command = $this->initCommand();
 
-        $this->assertFalse($command->execute());
+        $command->execute();
+    }
+
+    /** @expectedException \InvalidArgumentException */
+    public function testToManyArgumentsShowsUsageAndFails()
+    {
+        $command = $this->initCommand([], ['test.json', '--option-after-argument']);
+
+        $command->execute();
     }
 
     public function testHelpOptionShowsHelpAndReturnsTrue()
