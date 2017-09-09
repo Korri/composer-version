@@ -62,12 +62,10 @@ class Command
         $file = $this->option('file', 'composer.json');
 
         $this->composerFile->parseFile($file);
+
         $version = $this->composerFile->getVersion();
-        try {
-            $version->increment($type);
-        } catch (\InvalidArgumentException $exception) {
-            $version->parse($type);
-        }
+        $version->increment($type);
+
         $this->composerFile->writeFile($file);
 
         $tagName = "v{$version}";

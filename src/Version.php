@@ -51,7 +51,8 @@ class Version
     public function increment($type)
     {
         if (!isset(self::TYPES[$type])) {
-            throw new \InvalidArgumentException('Invalid increment type: ' . $type);
+            $this->parse($type);
+            return;
         }
         $index = self::TYPES[$type];
 
