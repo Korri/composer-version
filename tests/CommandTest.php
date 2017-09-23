@@ -111,6 +111,7 @@ class CommandTest extends TestCase
 
         $command = $this->initCommand([], ['minor'], $mockComposerFile, $mockGit);
 
+        $this->expectOutputString("v1.2.0\n");
         $this->assertTrue($command->execute());
     }
 
@@ -124,6 +125,7 @@ class CommandTest extends TestCase
 
         $command = $this->initCommand([], ['0.1.1'], $mockComposerFile, $mockGit);
 
+        $this->expectOutputString("v0.1.1\n");
         $this->assertTrue($command->execute());
     }
 
@@ -137,6 +139,7 @@ class CommandTest extends TestCase
 
         $command = $this->initCommand(['file' => 'test.json'], ['patch'], $mockComposerFile, $mockGit);
 
+        $this->expectOutputString("v1.1.2\n");
         $this->assertTrue($command->execute());
     }
 
@@ -152,6 +155,7 @@ class CommandTest extends TestCase
 
         $command = $this->initCommand(['file' => 'test.json', 'push' => false], ['major'], $mockComposerFile, $mockGit);
 
+        $this->expectOutputString("v2.0.0\n");
         $this->assertTrue($command->execute());
     }
 }

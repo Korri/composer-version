@@ -66,6 +66,8 @@ class Command
         $this->git->commitFile($file, $tagName);
         $this->git->tagVersion($tagName);
 
+        echo $tagName . "\n";
+
         if ($this->option('push') !== null) {
             $this->git->push();
             $this->git->push($tagName);
