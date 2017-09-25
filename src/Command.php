@@ -100,7 +100,7 @@ HELP;
         return $this->options[$name] ?? $default;
     }
 
-    public function parseOptions(array $argv): void
+    public function parseOptions(array $argv)
     {
         $rawOptions = getopt(implode('', array_keys(self::OPTIONS)), self::OPTIONS, $argumentIndex);
         $this->arguments = array_slice($argv, $argumentIndex);
