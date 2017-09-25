@@ -34,7 +34,7 @@ class Version
         return $this->parts;
     }
 
-    public function setParts(array $parts): void
+    public function setParts(array $parts)
     {
         $this->parts = $parts;
     }
